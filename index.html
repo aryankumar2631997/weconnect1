@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>WeConnect | Multi-Service Merchant Registration</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #e8edff 0%, #f4f6ff 50%, #f0f4ff 100%);
+      padding: 1.5rem 1rem;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      margin: auto;
+      background: #ffffff;
+      padding: 2rem 1.8rem;
+      border-radius: 2rem;
+      box-shadow: 0 20px 50px rgba(26, 59, 232, 0.12), 0 8px 20px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    h2 {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #0b1e59;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.3px;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: #5a6a8c;
+      margin-bottom: 1.8rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 12px;
+      color: white;
+      font-weight: 600;
+      z-index: 1000;
+      display: none;
+      animation: slideIn 0.3s ease;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    
+    .notification.success {
+      background: #10b981;
+      display: block;
+    }
+    
+    .notification.error {
+      background: #ef4444;
+      display: block;
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* Category Selector */
+    .category-selector {
+      background: #f8faff;
+      border: 2px solid #e0e7ff;
+      border-radius: 1.5rem;
+      padding: 1.2rem 1rem;
+      margin-bottom: 1.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    
+    .category-selector label {
+      font-weight: 700;
+      width: 100%;
+      text-align: center;
+      color: #1a2b5c;
+      margin-bottom: 0.3rem;
+      font-size: 0.95rem;
+    }
+    
+    .cat-btn {
+      background: white;
+      border: 1.5px solid #d4daf5;
+      border-radius: 2rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #37456e;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    
+    .cat-btn i {
+      font-size: 0.9rem;
+    }
+    
+    .cat-btn:hover {
+      border-color: #1a3be8;
+      background: #f0f3ff;
+    }
+    
+    .cat-btn.active {
+      background: #1a3be8;
+      color: white;
+      border-color: #1a3be8;
+      box-shadow: 0 5px 12px rgba(26, 59, 232, 0.3);
+    }
+    
+    .cat-btn.active i {
+      color: white;
+    }
+
+    /* Sections */
+    .department-forms {
+      margin-bottom: 1rem;
+    }
+    
+    .dept-section {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .dept-section.active {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section {
+      margin-bottom: 0.9rem;
+      border: 1px solid #e9edfc;
+      border-radius: 1rem;
+      background: #ffffff;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.02);
+      overflow: hidden;
+    }
+    
+    .section-header {
+      padding: 0.9rem 1.2rem;
+      background: #fafbff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #1f2a5c;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+      border-bottom: 1px solid transparent;
+      transition: 0.2s;
+    }
+    
+    .section-header i:first-child {
+      margin-right: 0.5rem;
+      color: #1a3be8;
+    }
+    
+    .section-header .toggle-icon {
+      background: #edf1ff;
+      border-radius: 50%;
+      width: 1.8rem;
+      height: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: #1a3be8;
+      transition: 0.3s;
+    }
+    
+    .section-header.open .toggle-icon {
+      transform: rotate(45deg);
+      background: #1a3be8;
+      color: white;
+    }
+    
+    .section-content {
+      display: none;
+      padding: 1rem 1.2rem 1.2rem;
+      background: white;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin-bottom: 0.3rem;
+    }
+    
+    .form-row > * {
+      flex: 1 1 calc(50% - 0.4rem);
+    }
+    
+    input, select, textarea {
+      width: 100%;
+      padding: 0.75rem 0.9rem;
+      margin: 0.2rem 0 0.4rem;
+      border: 1px solid #dce2f2;
+      border-radius: 0.8rem;
+      font-size: 0.9rem;
+      background: #fcfdff;
+      transition: 0.2s;
+      font-family: inherit;
+      color: #121926;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #1a3be8;
+      box-shadow: 0 0 0 3px rgba(26, 59, 232, 0.12);
+      background: white;
+    }
+    
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+    
+    select {
+      appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="%231a3be8"><path d="M7 10l5 5 5-5z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 0.9rem center;
+      cursor: pointer;
+    }
+    
+    .small-note {
+      font-size: 0.75rem;
+      color: #667699;
+      margin-top: 0.4rem;
+    }
+
+    /* Photo Upload Styles */
+    .photo-upload-area {
+      border: 2px dashed #cbd5ff;
+      border-radius: 1rem;
+      padding: 1.2rem;
+      text-align: center;
+      background: #fafbff;
+      transition: all 0.3s;
+      cursor: pointer;
+      margin: 0.8rem 0;
+      position: relative;
+    }
+    
+    .photo-upload-area:hover {
+      border-color: #1a3be8;
+      background: #f0f3ff;
+    }
+    
+    .photo-upload-area.has-photo {
+      border-color: #22c55e;
+      background: #f0fdf4;
+      border-style: solid;
+    }
+    
+    .photo-upload-area i {
+      font-size: 2rem;
+      color: #1a3be8;
+      margin-bottom: 0.5rem;
+    }
+    
+    .photo-upload-area .upload-text {
+      font-weight: 600;
+      color: #37456e;
+      font-size: 0.9rem;
+    }
+    
+    .photo-upload-area .upload-hint {
+      font-size: 0.75rem;
+      color: #8892b0;
+      margin-top: 0.3rem;
+    }
+    
+    .photo-upload-area input[type="file"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    
+    .photo-preview-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 0.8rem;
+      justify-content: center;
+    }
+    
+    .photo-preview {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      border-radius: 0.8rem;
+      overflow: hidden;
+      border: 2px solid #e0e5f2;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    }
+    
+    .photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .photo-preview .remove-photo {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+    }
+    
+    .photo-preview .remove-photo:hover {
+      background: #dc2626;
+      transform: scale(1.1);
+    }
+    
+    .photo-label {
+      font-weight: 600;
+      color: #1f2a5c;
+      font-size: 0.85rem;
+      margin-top: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    
+    .photo-label i {
+      color: #1a3be8;
+    }
+
+    .location-btn {
+      background: #f4f6ff;
+      border: 2px dashed #1a3be8;
+      color: #1a3be8;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.8rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      width: 100%;
+      transition: 0.2s;
+      font-size: 0.9rem;
+    }
+    
+    .location-btn:hover {
+      background: #eef1ff;
+    }
+
+    button#submitBtn {
+      width: 100%;
+      padding: 1rem;
+      background: #1a3be8;
+      color: white;
+      border: none;
+      border-radius: 3rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: 0.25s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 8px 20px rgba(26, 59, 232, 0.3);
+    }
+    
+    button#submitBtn:hover {
+      background: #0f2bb8;
+      box-shadow: 0 12px 28px rgba(15, 43, 184, 0.4);
+      transform: translateY(-2px);
+    }
+    
+    button#submitBtn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    #locStatus {
+      font-size: 0.85rem;
+      margin-top: 0.4rem;
+      font-weight: 500;
+    }
+    
+    .photo-count-badge {
+      background: #22c55e;
+      color: white;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 1rem;
+      margin-left: 0.5rem;
+    }
+    
+    hr {
+      border: 0.5px solid #e2e8f0;
+      margin: 0.6rem 0;
+    }
+
+    /* Loading spinner */
+    .fa-spinner {
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        padding: 1.5rem 1rem;
+      }
+      .form-row > * {
+        flex: 1 1 100%;
+      }
+      .cat-btn {
+        font-size: 0.78rem;
+        padding: 0.4rem 0.7rem;
+      }
+      .photo-preview {
+        width: 70px;
+        height: 70px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Notification -->
+<div class="notification" id="notification"></div>
+
+<div class="container">
+  <h2><i class="fas fa-store-alt"></i> WeConnect Merchant</h2>
+  <p class="subtitle">Multi-Service Registration • Add photos for better visibility</p>
+
+  <!-- Category Selection -->
+  <div class="category-selector" id="categorySelector">
+    <label><i class="fas fa-tag"></i> Select Business Type:</label>
+    <button class="cat-btn active" data-cat="doctor"><i class="fas fa-hospital"></i> Doctor/Hospital</button>
+    <button class="cat-btn" data-cat="banquet"><i class="fas fa-hotel"></i> Hotel/Banquet</button>
+    <button class="cat-btn" data-cat="transport"><i class="fas fa-car"></i> Transport</button>
+    <button class="cat-btn" data-cat="school"><i class="fas fa-school"></i> School/Tuition</button>
+    <button class="cat-btn" data-cat="marriage"><i class="fas fa-ring"></i> Marriage/Event</button>
+    <button class="cat-btn" data-cat="local"><i class="fas fa-tools"></i> Local Services</button>
+  </div>
+
+  <!-- DEPARTMENT FORMS CONTAINER -->
+  <div class="department-forms">
+
+    <!-- 1. DOCTOR / HOSPITAL -->
+    <div class="dept-section active" id="dept-doctor">
+      <!-- Photo Upload for Doctor -->
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span><i class="fas fa-camera"></i> Photos <span class="photo-count-badge" id="doc-photo-count">0</span></span>
+          <span class="toggle-icon"><i class="fas fa-plus"></i></span>
+        </div>
+        <div class="section-content">
+          <p class="photo-label"><i class="fas fa-image"></i> Hospital/Clinic Photos (Max 3)</p>
+          <div class="photo-upload-area" id="doc-photo-area">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <div class="upload-text">Click or Drag to Upload Photos</div>
+            <div class="upload-hint">JPG, PNG, WEBP • Max 5MB each</div>
+            <input type="file" id="doc-photo-input" accept="image/*" multiple onchange="handlePhotoUpload(this, 'doc')">
+          </div>
+          <div class="photo-preview-container" id="doc-photo-previews"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span><i class="fas fa-info-circle"></i> Basic Info</span>
+          <span class="toggle-icon"><i class="fas fa-plus"></i></span>
+        </div>
+        <div class="section-content">
+          <input id="doc_hospitalName" placeholder="Hospital / Clinic Name *" required>
+          <div class="form-row">
+            <input id="doc_doctorName" placeholder="Doctor Name(s) *" required>
+            <input id="doc_phone" placeholder="WhatsApp Number *" type="tel" required>
+          </div>
+          <textarea id="doc_address" placeholder="Full Address *" required></textarea>
+          <div class="form-row">
+            <input id="doc_landmark" placeholder="Landmark">
+            <input id="doc_timing" placeholder="Opening Hours">
+          </div>
+        </div>
+      </div>
+      
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span><i class="fas fa-stethoscope"></i> Medical Profile</span>
+          <span class="toggle-icon"><i class="fas fa-plus"></i></span>
+        </div>
+        <div class="section-content">
+          <div class="form-row">
+            <input id="doc_specialization" placeholder="Specialization *" required>
+            <input id="doc_qualification" placeholder="Qualification (optional)">
+          </div>
+          <div class="form-row">
+            <input id="doc_experience" placeholder="Experience (Years)">
+            <input id="doc_fee" placeholder="Consultation Fee">
+          </div>
+        </div>
+      </div>
+      
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span><i class="fas fa-procedures"></i> Services & Booking</span>
+          <span class="toggle-icon"><i class="fas fa-plus"></i></span>
+        </div>
+        <div class="section-content">
+          <div class="form-row">
+            <select id="doc_opd"><option value="">OPD Available?</option><option>Yes</option><option>No</option></select>
+            <select id="doc_emergency"><option value="">Emergency Care?</option><option>Yes</option><option>No</option></select>
+            <select id="doc_surgery"><option value="">Surgery?</option><option>Yes</option><option>No</option></select>
+          </div>
+          <div class="form-row">
+            <select id="doc_maternity"><option value="">Maternity?</option><option>Yes</option><option>No</option></select>
+            <select id="doc_lab"><option value="">Lab Services?</option><option>Yes</option><option>No</option></select>
+            <select id="doc_xray"><option value="">X-Ray/Imaging?</option><option>Yes</option><option>No</option></select>
+          </div>
+          <hr>
+          <div class="form-row">
+            <select id="doc_appointment"><option value="">Appointment Required?</option><option>Yes</option><option>No</option></select>
+            <select id="doc_emergencyAvail"><option value="">24/7 Emergency?</option><option>Yes</option><option>No</option></select>
+          </div>
+          <input id="doc_maxPatients" placeholder="Max Patients/Day (optional)" type="number">
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. HOTEL / BANQUET -->
+    <div class="dept-section" id="dept-banquet">
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span><i class="fas fa-camera"></i> Photos <span class="photo-count-badge" id="ban-photo-count">0</span></span>
+          <span class="toggle-icon"><i class="fas fa-plus"></i></span>
+        </div>
+        <div class="section-content">
+          <p class="photo-label"><i class="fas fa-image"></i> Hotel/Banquet Photos (Max 3)</p>
+          <div class="photo-upload-area" id="ban-photo-area">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <div class="upload-text">Click or Drag to Upload Photos</div>
+            <div class="upload-hint">JPG, PNG, WEBP • Max 5MB each</div>
+            <input type="file" id="ban-photo-input" accept="image/*" multiple onchange="handlePhotoUpload(this, 'ban')">
+          </div>
+          <div class="photo-preview-container" id="ban-photo-previews"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)"><span><i class="fas fa-info-circle"></i> Basic Info</span><span class="toggle-icon"><i class="fas fa-plus"></i></span></div>
+        <div class="section-content">
+          <input id="ban_hotelName" placeholder="Hotel Name *" required>
+          <div class="form-row"><input id="ban_owner" placeholder="Owner Name"><input id="ban_phone" placeholder="WhatsApp *" required></div>
+          <textarea id="ban_address" placeholder="Address + Landmark *" required></textarea>
+        </div>
+      </div>
+      
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)"><span><i class="fas fa-bed"></i> Rooms & Pricing</span><span class="toggle-icon"><i class="fas fa-plus"></i></span></div>
+        <div class="section-content">
+          <input id="ban_roomTypes" placeholder="Room Types (AC/Non-AC/Deluxe)">
+          <div class="form-row"><input id="ban_priceNight" placeholder="Price/Night"><input id="ban_availability" placeholder="Availability Status"></div>
+        </div>
+      </div>
+      
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)"><span><i class="fas fa-glass-cheers"></i> Event & Extra</span><span class="toggle-icon"><i class="fas fa-plus"></i></span></div>
+        <div class="section-content">
+          <div class="form-row">
+            <select id="ban_banquetHall"><option value="">Banquet Hall?</option><option>Yes</option><option>No</option></select>
+            <input id="ban_capacity" placeholder="Capacity (people)">
+          </div>
+          <div class="form-row">
+            <select id="ban_marriage"><option value="">Marriage/Party?</option><option>Yes</option><option>No</option></select>
+            <select id="ban_food"><option value="">Food Available?</option><option>Yes</option><option>No</option></select>
+          </div>
+          <select id="ban_catering"><option value="">Catering Included?</option><option>Yes</option><option>No</option></select>
+          <div class="form-row">
+            <select id="ban_advance"><option value="">Advance Required?</option><option>Yes</option><option>No</option></select>
+            <input id="ban_checkInOut" placeholder="Check-in/out Timing">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. TRANSPORT -->
+    <div class="dept-section" id="dept-transport">
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span><i class="fas fa-camera"></i> Photos <span class="photo-count-badge" id="trans-photo-count">0</span></span>
+          <span class="toggle-icon"><i class="fas fa-plus"></i></span>
+        </div>
+        <div class="section-content">
+          <p class="photo-label"><i class="fas fa-image"></i> Vehicle Photos (Max 3)</p>
+          <div class="photo-upload-area" id="trans-photo-area">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <div class="upload-text">Click or Drag to Upload Photos</div>
+            <div class="upload-hint">JPG, PNG, WEBP • Max 5MB each</div>
+            <input type="file" id="trans-photo-input" accept="image/*" multiple onchange="handlePhotoUpload(this, 'trans')">
+          </div>
+          <div class="photo-preview-container" id="trans-photo-previews"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)"><span><i class="fas fa-info-circle"></i> Basic Info</span><span class="toggle-icon"><i class="fas fa-plus"></i></span></div>
+        <div class="section-content">
+          <input id="trans_driverName" placeholder="Driver Name *" required>
+          <div class="form-row"><input id="trans_vehicleType" placeholder="Vehicle Type *" required><input id="trans_phone" placeholder="Phone *" required></div>
+          <input id="trans_location" placeholder="Home Location">
+        </div>
+      </div>
+      
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)"><span><i class="fas fa-car-side"></i> Vehicle & Pricing</span><span class="toggle-icon"><i class="fas fa-plus"></i></span></div>
+        <div class="section-content">
+          <div class="form-row"><input id="trans_vehicleNum" placeholder="Vehicle Number"><select id="trans_ac"><option value="">AC/Non-AC</option><option>AC</option><option>Non-AC</option></select></div>
+          <input id="trans_seating" placeholder="Seating Capacity">
+          <div class="form-row"><input id="trans_perKm" placeholder="Per Km Rate"><input id="trans_minCharge" placeholder="Minimum Charge"></div>
+          <div class="form-row">
+            <select id="trans_localOut"><option value="">Local/Outstation</option><option>Local</option><option>Outstation</option><option>Both</option></select>
+            <input id="trans_workingHours" placeholder="Working Hours">
+          </div>
+          <select id="trans_instant"><option value="">Instant Available?</option><option>Yes</option><option>No</option></select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. SCHOOL / TUITION -->
+    <div class="dept-section" id="dept-school">
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span><i class="fas fa-camera"></i> Photos <span class="photo-count-badge" id="sch-photo-count">0</span></span>
+          <span class="toggle-icon"><i class="fas fa-plus"></i></span>
+        </div>
+        <div class="section-content">
+          <p class="photo-label"><i class="fas fa-image"></i> School/Institute Photos (Max 3)</p>
+          <div class="photo-upload-area" id="sch-photo-area">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <div class="upload-text">Click or Drag to Upload Photos</div>
+            <div class="upload-hint">JPG, PNG, WEBP • Max 5MB each</div>
+            <input type="file" id="sch-photo-input" accept="image/*" multiple onchange="handlePhotoUpload(this, 'sch')">
+          </div>
+          <div class="photo-preview-container" id="sch-photo-previews"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)"><span><i class="fas fa-info-circle"></i> Basic Info</span><span class="toggle-icon"><i class="fas fa-plus"></i></span></div>
+        <div class="section-content">
+          <input id="sch_name" placeholder="School / Institute Name *" required>
+          <div class="form-row"><input id="sch_principal" placeholder="Principal/Owner"><input id="sch_phone" placeholder="Phone *" required></div>
+          <textarea id="sch_address" placeholder="Address *" required></textarea>
+        </div>
+      </div>
+      
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)"><span><i class="fas fa-book-open"></i> Education & Fees</span><span class="toggle-icon"><i class="fas fa-plus"></i></span></div>
+        <div class="section-content">
+          <input id="sch_classes" placeholder="Classes Offered (1-12 / subjects)">
+          <div class="form-row"><select id="sch_board"><option value="">Board</option><option>CBSE</option><option>State</option><option>Other</option></select><select id="sch_medium"><option value="">Medium</option><option>English</option><option>Hindi</option><option>Other</option></select></div>
+          <div class="form-row"><input id="sch_admissionFee" placeholder="Admission Fee"><input id="sch_monthlyFee" placeholder="Monthly/Yearly Fee"></div>
+          <div class="form-row"><input id="sch_seats" placeholder="Seats per Class"><select id="sch_admissionOpen"><option value="">Admission Open?</option><option>Yes</option><option>No</option></select></div>
+          <input id="sch_contactPerson" placeholder="Contact Person for Admission">
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. MARRIAGE / EVENT -->
+    <div class="dept-section" id="dept-marriage">
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span><i class="fas fa-camera"></i> Photos <span class="photo-count-badge" id="mar-photo-count">0</span></span>
+          <span class="toggle-icon"><i class="fas fa-plus"></i></span>
+        </div>
+        <div class="section-content">
+          <p class="photo-label"><i class="fas fa-image"></i> Venue/Event Photos (Max 3)</p>
+          <div class="photo-upload-area" id="mar-photo-area">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <div class="upload-text">Click or Drag to Upload Photos</div>
+            <div class="upload-hint">JPG, PNG, WEBP • Max 5MB each</div>
+            <input type="file" id="mar-photo-input" accept="image/*" multiple onchange="handlePhotoUpload(this, 'mar')">
+          </div>
+          <div class="photo-preview-container" id="mar-photo-previews"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)"><span><i class="fas fa-info-circle"></i> Basic Info</span><span class="toggle-icon"><i class="fas fa-plus"></i></span></div>
+        <div class="section-content">
+          <input id="mar_venueName" placeholder="Venue Name *" required>
+          <div class="form-row"><input id="mar_owner" placeholder="Owner"><input id="mar_phone" placeholder="Phone *" required></div>
+          <textarea id="mar_address" placeholder="Address *" required></textarea>
+        </div>
+      </div>
+      
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)"><span><i class="fas fa-ring"></i> Services & Packages</span><span class="toggle-icon"><i class="fas fa-plus"></i></span></div>
+        <div class="section-content">
+          <div class="form-row"><input id="mar_hallCapacity" placeholder="Hall Capacity"><select id="mar_indoorOutdoor"><option value="">Indoor/Outdoor</option><option>Indoor</option><option>Outdoor</option><option>Both</option></select></div>
+          <div class="form-row">
+            <select id="mar_decoration"><option value="">Decoration?</option><option>Yes</option><option>No</option></select>
+            <select id="mar_catering"><option value="">Catering?</option><option>Yes</option><option>No</option></select>
+            <select id="mar_photography"><option value="">Photography?</option><option>Yes</option><option>No</option></select>
+          </div>
+          <div class="form-row"><input id="mar_basicPrice" placeholder="Basic Package Price"><input id="mar_premiumPrice" placeholder="Premium Package"></div>
+          <div class="form-row">
+            <select id="mar_advance"><option value="">Advance Required?</option><option>Yes</option><option>No</option></select>
+            <input id="mar_cancellation" placeholder="Cancellation Policy">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. LOCAL SERVICES -->
+    <div class="dept-section" id="dept-local">
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span><i class="fas fa-camera"></i> Photos <span class="photo-count-badge" id="locservice-photo-count">0</span></span>
+          <span class="toggle-icon"><i class="fas fa-plus"></i></span>
+        </div>
+        <div class="section-content">
+          <p class="photo-label"><i class="fas fa-image"></i> Work/Service Photos (Max 3)</p>
+          <div class="photo-upload-area" id="locservice-photo-area">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <div class="upload-text">Click or Drag to Upload Photos</div>
+            <div class="upload-hint">JPG, PNG, WEBP • Max 5MB each</div>
+            <input type="file" id="locservice-photo-input" accept="image/*" multiple onchange="handlePhotoUpload(this, 'locservice')">
+          </div>
+          <div class="photo-preview-container" id="locservice-photo-previews"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)"><span><i class="fas fa-info-circle"></i> Basic Info</span><span class="toggle-icon"><i class="fas fa-plus"></i></span></div>
+        <div class="section-content">
+          <input id="loc_name" placeholder="Service Provider Name *" required>
+          <div class="form-row"><input id="loc_phone" placeholder="Phone *" required><input id="loc_location" placeholder="Location *" required></div>
+        </div>
+      </div>
+      
+      <div class="section">
+        <div class="section-header" onclick="toggleSection(this)"><span><i class="fas fa-tools"></i> Skill & Pricing</span><span class="toggle-icon"><i class="fas fa-plus"></i></span></div>
+        <div class="section-content">
+          <select id="loc_skill"><option value="">Skill Type *</option><option>Electrician</option><option>Plumber</option><option>Cleaner</option><option>Delivery</option><option>Repair</option><option>Other</option></select>
+          <div class="form-row"><input id="loc_perVisit" placeholder="Per Visit Charge"><input id="loc_emergencyCharge" placeholder="Emergency Extra Charge"></div>
+          <div class="form-row">
+            <select id="loc_emergencyService"><option value="">Emergency Service?</option><option>Yes</option><option>No</option></select>
+            <input id="loc_workingHours" placeholder="Working Hours">
+          </div>
+          <input id="loc_radius" placeholder="Service Radius (local/city)">
+        </div>
+      </div>
+    </div>
+
+    <!-- GPS (shared) -->
+    <div class="section">
+      <div class="section-header" onclick="toggleSection(this)">
+        <span><i class="fas fa-map-marker-alt"></i> GPS Location</span>
+        <span class="toggle-icon"><i class="fas fa-plus"></i></span>
+      </div>
+      <div class="section-content">
+        <button type="button" class="location-btn" onclick="getLocation()"><i class="fas fa-satellite-dish"></i> Capture GPS Location</button>
+        <p id="locStatus"></p>
+        <p class="small-note"><i class="fas fa-info-circle"></i> This helps customers find you on the map</p>
+      </div>
+    </div>
+  </div>
+
+  <button id="submitBtn" onclick="submitForm()"><i class="fas fa-paper-plane"></i> Submit Merchant Profile</button>
+</div>
+
+<script>
+  (function() {
+    // Global variables
+    let lat = "", lng = "";
+    let currentDept = "doctor";
+    
+    // Photo storage
+    const photoStore = {
+      doc: [],
+      ban: [],
+      trans: [],
+      sch: [],
+      mar: [],
+      locservice: []
+    };
+
+    // Map display IDs to store keys
+    const deptToKey = {
+      doctor: 'doc',
+      banquet: 'ban',
+      transport: 'trans',
+      school: 'sch',
+      marriage: 'mar',
+      local: 'locservice'
+    };
+
+    // Field mappings for each department
+    const fieldMappings = {
+      doctor: ['hospitalName','doctorName','phone','address','landmark','timing',
+               'specialization','qualification','experience','fee',
+               'opd','emergency','surgery','maternity','lab','xray',
+               'appointment','emergencyAvail','maxPatients'],
+      banquet: ['hotelName','owner','phone','address','roomTypes','priceNight',
+                'availability','banquetHall','capacity','marriage','food','catering',
+                'advance','checkInOut'],
+      transport: ['driverName','vehicleType','phone','location','vehicleNum','ac',
+                  'seating','perKm','minCharge','localOut','workingHours','instant'],
+      school: ['name','principal','phone','address','classes','board','medium',
+               'admissionFee','monthlyFee','seats','admissionOpen','contactPerson'],
+      marriage: ['venueName','owner','phone','address','hallCapacity','indoorOutdoor',
+                 'decoration','catering','photography','basicPrice','premiumPrice',
+                 'advance','cancellation'],
+      local: ['name','phone','location','skill','perVisit','emergencyCharge',
+              'emergencyService','workingHours','radius']
+    };
+
+    // Notification system
+    function showNotification(message, type = 'success') {
+      const notification = document.getElementById('notification');
+      notification.textContent = message;
+      notification.className = `notification ${type}`;
+      setTimeout(() => {
+        notification.className = 'notification';
+      }, 4000);
+    }
+
+    // Category switching
+    document.getElementById('categorySelector').addEventListener('click', function(e) {
+      if (e.target.closest('.cat-btn')) {
+        const btn = e.target.closest('.cat-btn');
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentDept = btn.dataset.cat;
+        document.querySelectorAll('.dept-section').forEach(s => s.classList.remove('active'));
+        document.getElementById('dept-' + currentDept).classList.add('active');
+      }
+    });
+
+    // Toggle sections
+    window.toggleSection = function(header) {
+      const content = header.nextElementSibling;
+      const isOpen = content.style.display === "block";
+      content.style.display = isOpen ? "none" : "block";
+      if (isOpen) {
+        header.classList.remove("open");
+        header.querySelector('.toggle-icon i').className = "fas fa-plus";
+      } else {
+        header.classList.add("open");
+        header.querySelector('.toggle-icon i').className = "fas fa-minus";
+      }
+    };
+
+    // GPS Location
+    window.getLocation = function() {
+      const statusEl = document.getElementById("locStatus");
+      if (!navigator.geolocation) {
+        statusEl.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:red;"></i> Geolocation not supported';
+        showNotification('Geolocation is not supported by your browser', 'error');
+        return;
+      }
+      statusEl.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Detecting location...';
+      
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          lat = pos.coords.latitude;
+          lng = pos.coords.longitude;
+          statusEl.innerHTML = `<i class="fas fa-check-circle" style="color:green;"></i> Location captured! (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
+          showNotification('GPS location captured successfully!', 'success');
+        },
+        (err) => {
+          statusEl.innerHTML = '<i class="fas fa-times-circle" style="color:red;"></i> Location access denied';
+          showNotification('Please allow location access or enter address manually', 'error');
+          console.warn("Geolocation error:", err);
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    };
+
+    // Photo Upload Handler
+    window.handlePhotoUpload = function(inputElement, deptKey) {
+      const files = Array.from(inputElement.files);
+      const maxPhotos = 3;
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      
+      // Filter valid files
+      const validFiles = files.filter(file => {
+        if (!file.type.startsWith('image/')) {
+          showNotification(`"${file.name}" is not an image file`, 'error');
+          return false;
+        }
+        if (file.size > maxSize) {
+          showNotification(`"${file.name}" exceeds 5MB limit`, 'error');
+          return false;
+        }
+        return true;
+      });
+
+      const currentPhotos = photoStore[deptKey];
+      
+      if (currentPhotos.length + validFiles.length > maxPhotos) {
+        showNotification(`Maximum ${maxPhotos} photos allowed. You have ${currentPhotos.length} already.`, 'error');
+        return;
+      }
+
+      // Add files to store
+      validFiles.forEach(file => {
+        if (currentPhotos.length < maxPhotos) {
+          currentPhotos.push(file);
+        }
+      });
+
+      // Update preview
+      renderPhotoPreviews(deptKey);
+      updatePhotoCount(deptKey);
+      
+      if (validFiles.length > 0) {
+        showNotification(`${validFiles.length} photo(s) added successfully!`, 'success');
+      }
+      
+      // Reset input
+      inputElement.value = '';
+    };
+
+    // Remove photo
+    window.removePhoto = function(deptKey, index) {
+      photoStore[deptKey].splice(index, 1);
+      renderPhotoPreviews(deptKey);
+      updatePhotoCount(deptKey);
+      showNotification('Photo removed', 'success');
+    };
+
+    // Render photo previews
+    function renderPhotoPreviews(deptKey) {
+      const previewContainer = document.getElementById(`${deptKey}-photo-previews`);
+      if (!previewContainer) return;
+      
+      const photos = photoStore[deptKey];
+      previewContainer.innerHTML = '';
+      
+      photos.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const div = document.createElement('div');
+          div.className = 'photo-preview';
+          div.innerHTML = `
+            <img src="${e.target.result}" alt="Photo ${index + 1}">
+            <button class="remove-photo" onclick="removePhoto('${deptKey}', ${index})" title="Remove photo">
+              <i class="fas fa-times"></i>
+            </button>
+          `;
+          previewContainer.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+      });
+
+      // Update upload area style
+      const uploadArea = document.getElementById(`${deptKey}-photo-area`);
+      if (uploadArea) {
+        if (photos.length > 0) {
+          uploadArea.classList.add('has-photo');
+        } else {
+          uploadArea.classList.remove('has-photo');
+        }
+      }
+    }
+
+    // Update photo count badge
+    function updatePhotoCount(deptKey) {
+      const countBadge = document.getElementById(`${deptKey}-photo-count`);
+      if (countBadge) {
+        countBadge.textContent = photoStore[deptKey].length;
+      }
+    }
+
+    // Get value safely
+    function val(id) { 
+      const element = document.getElementById(id);
+      return element ? element.value.trim() : "Not provided"; 
+    }
+
+    // Validate required fields
+    function validateFields(dept, deptKey) {
+      const fields = fieldMappings[dept];
+      const requiredFields = {
+        doctor: ['hospitalName', 'doctorName', 'phone', 'address', 'specialization'],
+        banquet: ['hotelName', 'phone', 'address'],
+        transport: ['driverName', 'vehicleType', 'phone'],
+        school: ['name', 'phone', 'address'],
+        marriage: ['venueName', 'phone', 'address'],
+        local: ['name', 'phone', 'location']
+      };
+
+      const required = requiredFields[dept] || ['name', 'phone'];
+      
+      for (const field of required) {
+        const elementId = `${deptKey}_${field}`;
+        const value = val(elementId);
+        if (!value || value === "Not provided") {
+          showNotification(`Please fill in the required field: ${field.replace(/([A-Z])/g, ' $1').toLowerCase()}`, 'error');
+          return false;
+        }
+      }
+      return true;
+    }
+
+    // Submit form
+    window.submitForm = async function() {
+      const dept = currentDept;
+      const deptKey = deptToKey[dept];
+      
+      // Validate
+      if (!validateFields(dept, deptKey)) {
+        return;
+      }
+      
+      const submitBtn = document.getElementById('submitBtn');
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+
+      // Create FormData
+      const formData = new FormData();
+      formData.append('department', dept);
+      formData.append('lat', lat);
+      formData.append('lng', lng);
+
+      // Add all fields
+      const fields = fieldMappings[dept];
+      fields.forEach(field => {
+        const elementId = `${deptKey}_${field}`;
+        const value = val(elementId);
+        formData.append(field, value);
+      });
+
+      // Add photos
+      const photos = photoStore[deptKey];
+      photos.forEach((file) => {
+        formData.append('photos', file);
+      });
+
+      try {
+        const response = await fetch('/api/register', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showNotification('✅ Registration successful! Redirecting to WhatsApp...', 'success');
+          
+          // Generate WhatsApp share link
+          const waNumber = "91YOURNUMBER"; // REPLACE with your WhatsApp number
+          const shareUrl = `${window.location.origin}/view/${result.data.id}`;
+          const waMessage = `📋 *New ${dept.toUpperCase()} Registration!*\n\n` +
+                           `View details: ${shareUrl}\n\n` +
+                           `ID: ${result.data.id}\n` +
+                           `Time: ${new Date().toLocaleString()}`;
+          
+          // Open WhatsApp after short delay
+          setTimeout(() => {
+            window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(waMessage)}`, '_blank');
+          }, 1500);
+          
+          // Reset form
+          photoStore[deptKey] = [];
+          renderPhotoPreviews(deptKey);
+          updatePhotoCount(deptKey);
+          
+          // Reset fields
+          fields.forEach(field => {
+            const elementId = `${deptKey}_${field}`;
+            const element = document.getElementById(elementId);
+            if (element) {
+              element.value = '';
+              if (element.tagName === 'SELECT') {
+                element.selectedIndex = 0;
+              }
+            }
+          });
+          
+          // Reset GPS
+          lat = "";
+          lng = "";
+          document.getElementById('locStatus').innerHTML = '';
+          
+        } else {
+          showNotification('❌ Error: ' + (result.message || 'Submission failed'), 'error');
+        }
+      } catch (error) {
+        console.error('Submission error:', error);
+        showNotification('❌ Network error. Please check your connection and try again.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+    };
+
+    // Auto-open first section of active department
+    setTimeout(() => {
+      document.querySelectorAll('.dept-section.active .section-header').forEach(h => {
+        if (h.nextElementSibling.style.display !== 'block') {
+          h.click();
+        }
+      });
+    }, 100);
+
+    console.log('🚀 WeConnect Merchant Registration Ready');
+    console.log('📋 Available departments:', Object.keys(deptToKey).join(', '));
+    console.log('💡 Tip: Fill all required fields marked with *');
+  })();
+</script>
+</body>
+</html>
